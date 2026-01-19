@@ -105,6 +105,34 @@ export class BacklogItemStorage {
   }
 
   /**
+   * Searches for backlog items by title or description (case-insensitive)
+   * @param query The search query
+   * @returns Array of matching backlog items
+   */
+  public search(query: string): BacklogItem[] {
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
+
+      const lowerQuery = query.toLowerCase();
+      const results: BacklogItem[] = [];
+
+      for (const item of this.storage.values()) {
+        if (item.title.toLowerCase().includes(lowerQuery) || 
+            item.description.toLowerCase().includes(lowerQuery)) {
+          results.push(item);
+        }
+      }
+
+      return results;
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.search');
+      return [];
+    }
+  }
+
+  /**
    * Locks the storage to prevent concurrent access
    */
   public lockStorage(): void {
