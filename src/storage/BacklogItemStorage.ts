@@ -1,4 +1,5 @@
-import { BacklogItem } from "../models/BacklogItem";
+import { BacklogItem } from '../models/BacklogItem';
+import { AppError, handleGlobalError } from '../errorHandler';
 
 export class BacklogItemStorage {
   private storage: Map<string, BacklogItem> = new Map();
@@ -10,16 +11,21 @@ export class BacklogItemStorage {
    * @returns Boolean indicating success
    */
   public create(item: BacklogItem): boolean {
-    if (this.lock) {
-      throw new Error("Storage is currently locked");
-    }
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
 
-    if (this.storage.has(item.id)) {
+      if (this.storage.has(item.id)) {
+        return false;
+      }
+
+      this.storage.set(item.id, item);
+      return true;
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.create');
       return false;
     }
-
-    this.storage.set(item.id, item);
-    return true;
   }
 
   /**
@@ -28,11 +34,16 @@ export class BacklogItemStorage {
    * @returns The backlog item or null if not found
    */
   public read(id: string): BacklogItem | null {
-    if (this.lock) {
-      throw new Error("Storage is currently locked");
-    }
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
 
-    return this.storage.get(id) || null;
+      return this.storage.get(id) || null;
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.read');
+      return null;
+    }
   }
 
   /**
@@ -41,16 +52,21 @@ export class BacklogItemStorage {
    * @returns Boolean indicating success
    */
   public update(item: BacklogItem): boolean {
-    if (this.lock) {
-      throw new Error("Storage is currently locked");
-    }
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
 
-    if (!this.storage.has(item.id)) {
+      if (!this.storage.has(item.id)) {
+        return false;
+      }
+
+      this.storage.set(item.id, item);
+      return true;
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.update');
       return false;
     }
-
-    this.storage.set(item.id, item);
-    return true;
   }
 
   /**
@@ -59,11 +75,16 @@ export class BacklogItemStorage {
    * @returns Boolean indicating success
    */
   public delete(id: string): boolean {
-    if (this.lock) {
-      throw new Error("Storage is currently locked");
-    }
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
 
-    return this.storage.delete(id);
+      return this.storage.delete(id);
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.delete');
+      return false;
+    }
   }
 
   /**
@@ -71,11 +92,16 @@ export class BacklogItemStorage {
    * @returns Array of all backlog items
    */
   public getAll(): BacklogItem[] {
-    if (this.lock) {
-      throw new Error("Storage is currently locked");
-    }
+    try {
+      if (this.lock) {
+        throw new AppError("Storage is currently locked");
+      }
 
-    return Array.from(this.storage.values());
+      return Array.from(this.storage.values());
+    } catch (error) {
+      handleGlobalError(error, 'BacklogItemStorage.getAll');
+      return [];
+    }
   }
 
   /**
