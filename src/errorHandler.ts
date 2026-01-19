@@ -1,4 +1,7 @@
 export class AppError extends Error {
+  public readonly code?: string;
+  public readonly statusCode: number = 500;
+
   constructor(
     public readonly message: string,
     public readonly code?: string,
@@ -30,7 +33,7 @@ export const validateStringInput = (
   }
 
   const stringValue = String(input).trim();
-  
+
   if (stringValue.length === 0) {
     throw new AppError(`Empty field not allowed: ${fieldName}`, 'EMPTY_FIELD');
   }
@@ -50,13 +53,13 @@ export const validateStatusInput = (
   fieldName: string
 ): string => {
   const validStatuses = ['To Do', 'In Progress', 'Done'];
-  
+
   if (status === null || status === undefined) {
     throw new AppError(`Missing required field: ${fieldName}`, 'MISSING_FIELD');
   }
 
   const statusValue = String(status).trim();
-  
+
   if (!validStatuses.includes(statusValue)) {
     throw new AppError(
       `Invalid status value: ${statusValue}. Valid values are: ${validStatuses.join(', ')}`,
