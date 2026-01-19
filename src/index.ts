@@ -17,7 +17,7 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n======================== Backlog Item Management System ========================');
+    console.log('\n============================ Backlog Item Management System ============================');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
@@ -27,7 +27,7 @@ class ConsoleApp {
     console.log('7. Search backlog items');
     console.log('8. Sort backlog items');
     console.log('0. Exit');
-    console.log('================================================================================');
+    console.log('========================================================================================');
   }
 
   // Parse user input
@@ -79,7 +79,7 @@ class ConsoleApp {
   async viewAllItems(): Promise<void> {
     try {
       const items = this.storage.getAll();
-      console.log('\n-------------------------- All Backlog Items --------------------------');
+      console.log('\n---------------------------------------- All Backlog Items ----------------------------------------');
       if (items.length == 0) {
         console.log('No backlog items found.');
       } else {
@@ -90,7 +90,7 @@ class ConsoleApp {
           console.log(`Status: ${item.status}`);
           console.log(`Created: ${item.createdAt.toISOString()}`);
           console.log(`Updated: ${item.updatedAt.toISOString()}`);
-          console.log('----------------------------------------');
+          console.log('---------------------------------------------------------------------------------------------------');
         });
       }
     } catch (error) {
@@ -249,7 +249,7 @@ class ConsoleApp {
           console.log(`Title: ${item.title}`);
           console.log(`Description: ${item.description}`);
           console.log(`Status: ${item.status}`);
-          console.log('----------------------------------------');
+          console.log('---------------------------------------------------------------------------------------------------');
         });
       }
     } catch (error) {
@@ -265,7 +265,7 @@ class ConsoleApp {
       console.log('1. Sort by Status');
       console.log('2. Sort by Creation Date');
       console.log('3. Sort by Title');
-      
+
       // For demo purposes, we'll simulate choosing option 1 (sort by status)
       const sortOption = '1';
 
@@ -325,11 +325,10 @@ class ConsoleApp {
         console.log(`Status: ${item.status}`);
         console.log(`Created: ${item.createdAt.toISOString()}`);
         console.log(`Updated: ${item.updatedAt.toISOString()}`);
-        console.log('----------------------------------------');
+        console.log('---------------------------------------------------------------------------------------------------');
       });
 
       console.log(`Current sort order: ${sortOrder}`);
-
     } catch (error) {
       handleGlobalError(error, 'sortItems');
     }
@@ -338,7 +337,7 @@ class ConsoleApp {
   // Main application loop
   async run(): Promise<void> {
     console.log('Welcome to the Backlog Item Management System!');
-
+    
     let running = true;
     while (running) {
       this.displayMenu();
