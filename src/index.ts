@@ -6,13 +6,16 @@ import {
   validateStringInput,
   validateStatusInput
 } from './errorHandler';
+import { AppLifecycle } from './appLifecycle';
 
 // Main console application entry point
 class ConsoleApp {
   private storage: BacklogItemStorage;
+  private lifecycle: AppLifecycle;
 
   constructor() {
     this.storage = new BacklogItemStorage();
+    this.lifecycle = new AppLifecycle();
   }
 
   // Display the main menu
@@ -338,6 +341,20 @@ class ConsoleApp {
   async run(): Promise<void> {
     console.log('Welcome to the Backlog Item Management System!');
     
+    // Register shutdown handler
+    this.lifecycle.registerShutdownHandler(() => {
+      console.log('Application shutdown handler executed');
+    });
+    
+    // Start the application lifecycle
+    const startSuccess = await this.lifecycle.start();
+    if (!startSuccess) {
+      console.error('Failed to start application. Exiting.');
+      return;
+    }
+    
+    console.log('Application started successfully!');
+    
     let running = true;
     while (running) {
       this.displayMenu();
@@ -345,6 +362,14 @@ class ConsoleApp {
       // For now, we'll simulate some choices for testing
       const choice = '8'; // Simulate choosing sort option
       running = await this.handleChoice(choice);
+    }
+    
+    // Graceful shutdown
+    const shutdownSuccess = await this.lifecycle.shutdown();
+    if (shutdownSuccess) {
+      console.log('Application shut down gracefully');
+    } else {
+      console.error('Error during application shutdown');
     }
   }
 }
