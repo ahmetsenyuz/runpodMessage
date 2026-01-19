@@ -11,14 +11,14 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n=== Backlog Item Management System ===');
+    console.log('\n======== Backlog Item Management System ========');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
     console.log('4. Update backlog item');
     console.log('5. Delete backlog item');
     console.log('0. Exit');
-    console.log('=====================================\n');
+    console.log('===============================================');
   }
 
   // Parse user input
@@ -57,7 +57,7 @@ class ConsoleApp {
   async viewAllItems(): Promise<void> {
     const items = this.storage.getAll();
     console.log('\n--- All Backlog Items ---');
-    if (items.length === 0) {
+    if (items.length == 0) {
       console.log('No backlog items found.');
     } else {
       items.forEach(item => {
@@ -65,9 +65,9 @@ class ConsoleApp {
         console.log(`Title: ${item.title}`);
         console.log(`Description: ${item.description}`);
         console.log(`Status: ${item.status}`);
-        console.log(`Created: ${item.createdAt.toISOString()}`);
-        console.log(`Updated: ${item.updatedAt.toISOString()}`);
-        console.log('------------------------');
+        console.log(`Created: ${item.createdAT.toISOString()}`);
+        console.log(`Updated: ${item.updatedAT.toISOString()}`);
+        console.log('-------------------------');
       });
     }
   }
@@ -82,7 +82,7 @@ class ConsoleApp {
       'This is a sample backlog item for demonstration purposes.',
       'To Do'
     );
-    
+
     if (this.storage.create(newItem)) {
       console.log('New backlog item added successfully!');
     } else {
@@ -102,8 +102,8 @@ class ConsoleApp {
       console.log(`Title: ${item.title}`);
       console.log(`Description: ${item.description}`);
       console.log(`Status: ${item.status}`);
-      console.log(`Created: ${item.createdAt.toISOString()}`);
-      console.log(`Updated: ${item.updatedAt.toISOString()}`);
+      console.log(`Created: ${item.createdAT.toISOString()}`);
+      console.log(`Updated: ${item.updatedAT.toISOString()}`);
     } else {
       console.log('No backlog items found.');
     }
@@ -118,7 +118,7 @@ class ConsoleApp {
       const item = items[0];
       item.title = 'Updated Title';
       item.description = 'Updated Description';
-      
+
       if (this.storage.update(item)) {
         console.log('Backlog item updated successfully!');
       } else {
