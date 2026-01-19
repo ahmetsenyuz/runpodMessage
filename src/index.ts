@@ -20,7 +20,7 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n============================ Backlog Item Management System ============================');
+    console.log('\n======================== Backlog Item Management System ========================');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
@@ -30,7 +30,7 @@ class ConsoleApp {
     console.log('7. Search backlog items');
     console.log('8. Sort backlog items');
     console.log('0. Exit');
-    console.log('========================================================================================');
+    console.log('================================================================================');
   }
 
   // Parse user input
@@ -340,21 +340,21 @@ class ConsoleApp {
   // Main application loop
   async run(): Promise<void> {
     console.log('Welcome to the Backlog Item Management System!');
-    
+
     // Register shutdown handler
     this.lifecycle.registerShutdownHandler(() => {
       console.log('Application shutdown handler executed');
     });
-    
+
     // Start the application lifecycle
     const startSuccess = await this.lifecycle.start();
     if (!startSuccess) {
       console.error('Failed to start application. Exiting.');
       return;
     }
-    
+
     console.log('Application started successfully!');
-    
+
     let running = true;
     while (running) {
       this.displayMenu();
@@ -363,7 +363,7 @@ class ConsoleApp {
       const choice = '8'; // Simulate choosing sort option
       running = await this.handleChoice(choice);
     }
-    
+
     // Graceful shutdown
     const shutdownSuccess = await this.lifecycle.shutdown();
     if (shutdownSuccess) {
