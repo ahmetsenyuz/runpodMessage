@@ -17,7 +17,7 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n============================== Backlog Item Management System ==============================');
+    console.log('\n======================== Backlog Item Management System ========================');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
@@ -27,7 +27,7 @@ class ConsoleApp {
     console.log('7. Search backlog items');
     console.log('8. Sort backlog items');
     console.log('0. Exit');
-    console.log('===========================================================================================');
+    console.log('================================================================================');
   }
 
   // Parse user input
@@ -79,7 +79,7 @@ class ConsoleApp {
   async viewAllItems(): Promise<void> {
     try {
       const items = this.storage.getAll();
-      console.log('\n---------------------------- All Backlog Items ----------------------------');
+      console.log('\n-------------------------- All Backlog Items --------------------------');
       if (items.length == 0) {
         console.log('No backlog items found.');
       } else {
@@ -240,7 +240,7 @@ class ConsoleApp {
 
       const results = this.storage.search(query);
 
-      if (results.length === 0) {
+      if (results.length == 0) {
         console.log('No matching backlog items found.');
       } else {
         console.log(`Found ${results.length} matching backlog item(s):`);
@@ -268,22 +268,22 @@ class ConsoleApp {
       
       // For demo purposes, we'll simulate choosing option 1 (sort by status)
       const sortOption = '1';
-      
+
       console.log(`Selected sort option: ${sortOption}`);
-      
+
       // Get all items
       const items = this.storage.getAll();
-      
-      if (items.length === 0) {
+
+      if (items.length == 0) {
         console.log('No backlog items to sort.');
         return;
       }
-      
+
       // Apply sorting based on user choice
       let sortedItems: BacklogItem[] = [];
       let sortOrder = 'ascending'; // Default sort order
-      
-      switch(sortOption) {
+
+      switch (sortOption) {
         case '1': // Sort by Status
           sortedItems = [...items].sort((a, b) => {
             const statusOrder = { 'To Do': 1, 'In Progress': 2, 'Done': 3 };
@@ -291,7 +291,7 @@ class ConsoleApp {
           });
           console.log('Sorted by Status (To Do → In Progress → Done)');
           break;
-          
+
         case '2': // Sort by Creation Date
           sortedItems = [...items].sort((a, b) => {
             return a.createdAt.getTime() - b.createdAt.getTime();
@@ -299,14 +299,14 @@ class ConsoleApp {
           console.log('Sorted by Creation Date (oldest first)');
           sortOrder = 'ascending';
           break;
-          
+
         case '3': // Sort by Title
           sortedItems = [...items].sort((a, b) => {
             return a.title.localeCompare(b.title);
           });
           console.log('Sorted by Title (alphabetically)');
           break;
-          
+
         default:
           console.log('Invalid sort option. Using default sort by Status.');
           sortedItems = [...items].sort((a, b) => {
@@ -315,7 +315,7 @@ class ConsoleApp {
           });
           break;
       }
-      
+
       // Display sorted items
       console.log('\n---------------------------------------- Sorted Backlog Items ----------------------------------------');
       sortedItems.forEach(item => {
@@ -327,9 +327,9 @@ class ConsoleApp {
         console.log(`Updated: ${item.updatedAt.toISOString()}`);
         console.log('----------------------------------------');
       });
-      
+
       console.log(`Current sort order: ${sortOrder}`);
-      
+
     } catch (error) {
       handleGlobalError(error, 'sortItems');
     }
