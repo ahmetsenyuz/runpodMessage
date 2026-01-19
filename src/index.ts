@@ -11,14 +11,14 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n======== Backlog Item Management System ========');
+    console.log('\n========= Backlog Item Management System =========');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
     console.log('4. Update backlog item');
     console.log('5. Delete backlog item');
     console.log('0. Exit');
-    console.log('===============================================');
+    console.log('==================================================');
   }
 
   // Parse user input
@@ -111,14 +111,20 @@ class ConsoleApp {
 
   // Update a backlog item
   async updateItem(): Promise<void> {
-    // In a real implementation, we would prompt for item ID and updates
+    // In a real implementation, we would prompt for item ID and update fields
     // For now, we'll update the first item if it exists
     const items = this.storage.getAll();
     if (items.length > 0) {
       const item = items[0];
+      
+      console.log('\n--- Updating Backlog Item ---');
+      console.log(`Current Title: ${item.title}`);
+      console.log(`Current Description: ${item.description}`);
+      
+      // Simulate updating fields
       item.title = 'Updated Title';
       item.description = 'Updated Description';
-
+      
       if (this.storage.update(item)) {
         console.log('Backlog item updated successfully!');
       } else {
@@ -155,7 +161,7 @@ class ConsoleApp {
       this.displayMenu();
       // In a real implementation, we would read actual user input
       // For now, we'll simulate some choices for testing
-      const choice = '1'; // Simulate choosing option 1
+      const choice = '4'; // Simulate choosing update option
       running = await this.handleChoice(choice);
     }
   }
