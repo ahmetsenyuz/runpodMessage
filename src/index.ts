@@ -1,8 +1,8 @@
 import { BacklogItem } from './models/BacklogItem';
 import { BacklogItemStorage } from './storage/BacklogItemStorage';
 import { 
-  AppError, 
-  handleGlobalError, 
+  AppError,
+  handleGlobalError,
   validateStringInput,
   validateStatusInput
 } from './errorHandler';
@@ -17,15 +17,16 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n============================== Backlog Item Management System ==============================');
+    console.log('\n======================== Backlog Item Management System ========================');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
     console.log('4. Update backlog item');
     console.log('5. Delete backlog item');
     console.log('6. Mark backlog item as complete');
+    console.log('7. Search backlog items');
     console.log('0. Exit');
-    console.log('============================================================================================');
+    console.log('================================================================================');
   }
 
   // Parse user input
@@ -55,6 +56,9 @@ class ConsoleApp {
         case '6':
           await this.markItemAsComplete();
           break;
+        case '7':
+          await this.searchItems();
+          break;
         case '0':
           console.log('Goodbye!');
           return false;
@@ -71,7 +75,7 @@ class ConsoleApp {
   async viewAllItems(): Promise<void> {
     try {
       const items = this.storage.getAll();
-      console.log('\n-------------------------------- All Backlog Items --------------------------------');
+      console.log('\n-------------------------- All Backlog Items --------------------------');
       if (items.length == 0) {
         console.log('No backlog items found.');
       } else {
@@ -120,7 +124,7 @@ class ConsoleApp {
       const items = this.storage.getAll();
       if (items.length > 0) {
         const item = items[0];
-        console.log('\n-------------------------------- Backlog Item Details --------------------------------');
+        console.log('\n---------------------------------------- Backlog Item Details ----------------------------------------');
         console.log(`ID: ${item.id}`);
         console.log(`Title: ${item.title}`);
         console.log(`Description: ${item.description}`);
@@ -144,7 +148,7 @@ class ConsoleApp {
       if (items.length > 0) {
         const item = items[0];
 
-        console.log('\n-------------------------------- Updating Backlog Item --------------------------------');
+        console.log('\n---------------------------------------- Updating Backlog Item ----------------------------------------');
         console.log(`Current Title: ${item.title}`);
         console.log(`Current Description: ${item.description}`);
 
@@ -195,12 +199,12 @@ class ConsoleApp {
       if (items.length > 0) {
         const item = items[0];
         
-        console.log('\n-------------------------------- Marking Backlog Item as Complete --------------------------------');
+        console.log('\n---------------------------------------- Marking Backlog Item as Complete ----------------------------------------');
         console.log(`Current Title: ${item.title}`);
         console.log(`Current Status: ${item.status}`);
 
         // Validate that the item can be marked as complete
-        if (item.status !== 'To Do' && item.status !== 'In Progress') {
+        if (item.status != 'To Do' && item.status != 'In Progress') {
           console.log('Error: Item status must be "To Do" or "In Progress" to be marked as complete.');
           return;
         }
@@ -222,6 +226,33 @@ class ConsoleApp {
     }
   }
 
+  // Search backlog items
+  async searchItems(): Promise<void> {
+    try {
+      // In a real implementation, we would prompt for search query
+      // For now, we'll search for "sample" in the items
+      const query = 'sample';
+      console.log(`\n---------------------------------------- Searching for "${query}" ----------------------------------------`);
+      
+      const results = this.storage.search(query);
+      
+      if (results.length === 0) {
+        console.log('No matching backlog items found.');
+      } else {
+        console.log(`Found ${results.length} matching backlog item(s):`);
+        results.forEach(item => {
+          console.log(`ID: ${item.id}`);
+          console.log(`Title: ${item.title}`);
+          console.log(`Description: ${item.description}`);
+          console.log(`Status: ${item.status}`);
+          console.log('----------------------------------------');
+        });
+      }
+    } catch (error) {
+      handleGlobalError(error, 'searchItems');
+    }
+  }
+
   // Main application loop
   async run(): Promise<void> {
     console.log('Welcome to the Backlog Item Management System!');
@@ -231,7 +262,7 @@ class ConsoleApp {
       this.displayMenu();
       // In a real implementation, we would read actual user input
       // For now, we'll simulate some choices for testing
-      const choice = '6'; // Simulate choosing mark as complete option
+      const choice = '7'; // Simulate choosing search option
       running = await this.handleChoice(choice);
     }
   }
