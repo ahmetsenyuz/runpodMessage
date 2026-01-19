@@ -11,14 +11,15 @@ class ConsoleApp {
 
   // Display the main menu
   displayMenu(): void {
-    console.log('\n======== Backlog Item Management System ========');
+    console.log('\n================== Backlog Item Management System ==================');
     console.log('1. View all backlog items');
     console.log('2. Add new backlog item');
     console.log('3. View specific backlog item');
     console.log('4. Update backlog item');
     console.log('5. Delete backlog item');
+    console.log('6. Mark backlog item as complete');
     console.log('0. Exit');
-    console.log('================================================');
+    console.log('====================================================================');
   }
 
   // Parse user input
@@ -44,6 +45,9 @@ class ConsoleApp {
       case '5':
         await this.deleteItem();
         break;
+      case '6':
+        await this.markItemAsComplete();
+        break;
       case '0':
         console.log('Goodbye!');
         return false;
@@ -56,7 +60,7 @@ class ConsoleApp {
   // View all backlog items
   async viewAllItems(): Promise<void> {
     const items = this.storage.getAll();
-    console.log('\n---------------- All Backlog Items ----------------');
+    console.log('\n------------------------ All Backlog Items ------------------------');
     if (items.length == 0) {
       console.log('No backlog items found.');
     } else {
@@ -67,7 +71,7 @@ class ConsoleApp {
         console.log(`Status: ${item.status}`);
         console.log(`Created: ${item.createdAt.toISOString()}`);
         console.log(`Updated: ${item.updatedAt.toISOString()}`);
-        console.log('----------------------------------------');
+        console.log('------------------------');
       });
     }
   }
@@ -97,7 +101,7 @@ class ConsoleApp {
     const items = this.storage.getAll();
     if (items.length > 0) {
       const item = items[0];
-      console.log('\n---------------- Backlog Item Details ----------------');
+      console.log('\n------------------------ Backlog Item Details ------------------------');
       console.log(`ID: ${item.id}`);
       console.log(`Title: ${item.title}`);
       console.log(`Description: ${item.description}`);
@@ -117,7 +121,7 @@ class ConsoleApp {
     if (items.length > 0) {
       const item = items[0];
 
-      console.log('\n---------------- Updating Backlog Item ----------------');
+      console.log('\n------------------------ Updating Backlog Item ------------------------');
       console.log(`Current Title: ${item.title}`);
       console.log(`Current Description: ${item.description}`);
 
@@ -152,16 +156,48 @@ class ConsoleApp {
     }
   }
 
+  // Mark a backlog item as complete
+  async markItemAsComplete(): Promise<void> {
+    // In a real implementation, we would prompt for item ID
+    // For now, we'll process the first item if it exists
+    const items = this.storage.getAll();
+    if (items.length > 0) {
+      const item = items[0];
+      
+      console.log('\n------------------------ Marking Backlog Item as Complete ------------------------');
+      console.log(`Current Title: ${item.title}`);
+      console.log(`Current Status: ${item.status}`);
+      
+      // Validate that the item can be marked as complete
+      if (item.status !== 'To Do' && item.status !== 'In Progress') {
+        console.log('Error: Item status must be "To Do" or "In Progress" to be marked as complete.');
+        return;
+      }
+      
+      // Update the status to "Done"
+      item.status = 'Done';
+      
+      if (this.storage.update(item)) {
+        console.log('Backlog item marked as complete successfully!');
+        console.log(`New Status: ${item.status}`);
+      } else {
+        console.log('Failed to mark backlog item as complete.');
+      }
+    } else {
+      console.log('No backlog items found to mark as complete.');
+    }
+  }
+
   // Main application loop
   async run(): Promise<void> {
     console.log('Welcome to the Backlog Item Management System!');
-
+    
     let running = true;
     while (running) {
       this.displayMenu();
       // In a real implementation, we would read actual user input
       // For now, we'll simulate some choices for testing
-      const choice = '5'; // Simulate choosing delete option
+      const choice = '6'; // Simulate choosing mark as complete option
       running = await this.handleChoice(choice);
     }
   }
